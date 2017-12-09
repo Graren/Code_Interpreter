@@ -176,6 +176,7 @@ if __name__ == "__main__":
             if expr == None: continue
             interpreter = Interpreter()
             result = interpreter.interpret(expr)
-            print(result)
+            if not result is None:
+                print(result)
             if isAssignment:
                 assingments[id] = result
