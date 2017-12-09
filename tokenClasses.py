@@ -53,6 +53,8 @@ class TokenTypes:
         "end": END,
         "true":TRUE,
         "false": FALSE,
+        "null": NULL,
         "||": OR,
-        "&&": AND
+        "&&": AND,
+        "=": EQUAL
     }

@@ -10,10 +10,11 @@ def error(token, message):
 
 class Parser:
 
-    def __init__(self, tokens, scanner):
+    def __init__(self, tokens, scanner, state = {}):
         self.tokens = tokens
         self.current = 0
         self.scanner = scanner
+        self.state = state
 
     def parse(self):
         try:
@@ -71,11 +72,17 @@ class Parser:
     def primary(self):
         if self.match(types.FALSE): return Literal(False)
         if self.match(types.TRUE): return Literal(True)
-        if self.match(types.NULL): return Literal(None)
+        if self.match(types.NULL) or self.match((types.EQUAL)) : return Literal(None)
 
         if( self.match(types.NUMBER, types.STRING)):
             return Literal(self.previous().literal)
-
+        if( self.match(types.IDENTIFIER) ):
+            id = self.previous().lexeme
+            value = self.state.get(id)
+            if value is None:
+                raise self.error(self.peek(), "Unexpected identifier")
+            else:
+                return Literal(value)
         if(self.match(types.LEFT_PAREN)):
             expr = self.expression()
             self.consume(types.RIGHT_PAREN, "Expected ')' after expression")

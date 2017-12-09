@@ -153,6 +153,8 @@ if __name__ == "__main__":
             isAssignment = False
             id = None
             response = input(">>")
+            if response == "\n" or response.strip((" ")) == "":
+                continue
             tokens = response.split(" ")
             scanner = Scanner(response)
             tokens = scanner.scanTokens()
@@ -163,22 +165,28 @@ if __name__ == "__main__":
                     isAssignment = True
                     id = tokens[0].lexeme
                     tokens = tokens[2:]
-                    parser = Parser(tokens, scanner)
+                    parser = Parser(tokens, scanner,assingments)
                     expr = parser.parse()
-                    # print(expr)
+                    if expr == None: continue
                     interpreter = Interpreter()
                     result = interpreter.interpret(expr)
                     assingments[id] = result
-                if not assingments.get(tokens[0].lexeme) == None:
-                    print("%s" % assingments.get(tokens[0].lexeme))
+                else:
+                    parser = Parser(tokens, scanner, assingments)
+                    expr = parser.parse()
+                    # print(expr)
+                    if expr == None: continue
+                    interpreter = Interpreter()
+                    result = interpreter.interpret(expr)
+                    print("%s" % result)
             else:
-                parser = Parser(tokens, scanner)
+                parser = Parser(tokens, scanner, assingments)
                 expr = parser.parse()
                 # print(expr)
+                if expr == None: continue
                 interpreter = Interpreter()
                 result = interpreter.interpret(expr)
                 print("%s" % result)
 
             if hadError:
                 SystemExit(65)
-
