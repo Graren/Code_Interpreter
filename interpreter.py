@@ -37,7 +37,7 @@ class Interpreter(Visitor):
             if (isNumber(left) and isNumber(right)):
                 return float(left) + float(right)
             else:
-                return left + right
+                return str(left) + str(right)
         elif expr.operator.tokenType == types.GREATER_EQUAL:
             checkNumberOperands(expr.operator, left, right)
             return float(left) >= float(right)

@@ -154,6 +154,9 @@ if __name__ == "__main__":
         while(True):
             isAssignment = False
             id = None
+            parser = None
+            result = None
+            expr = None
             response = input(">>")
             if response == "\n" or response.strip((" ")) == "":
                 continue
@@ -168,23 +171,11 @@ if __name__ == "__main__":
                     isAssignment = True
                     id = tokens[0].lexeme
                     tokens = tokens[2:]
-                    parser = Parser(tokens, scanner,assingments)
-                    expr = parser.parse()
-                    if expr == None: continue
-                    interpreter = Interpreter()
-                    result = interpreter.interpret(expr)
-                    assingments[id] = result
-                else:
-                    parser = Parser(tokens, scanner, assingments)
-                    expr = parser.parse()
-                    if expr == None: continue
-                    interpreter = Interpreter()
-                    result = interpreter.interpret(expr)
-                    print("%s" % result)
-            else:
-                parser = Parser(tokens, scanner, assingments)
-                expr = parser.parse()
-                if expr == None: continue
-                interpreter = Interpreter()
-                result = interpreter.interpret(expr)
-                print("%s" % result)
+            parser = Parser(tokens, scanner, assingments)
+            expr = parser.parse()
+            if expr == None: continue
+            interpreter = Interpreter()
+            result = interpreter.interpret(expr)
+            print(result)
+            if isAssignment:
+                assingments[id] = result
