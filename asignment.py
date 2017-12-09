@@ -1,6 +1,6 @@
 from assignment.token import  Token, tokenClasses
 from assignment.parser import Parser
-from assignment.errors import hadError, error, masculineError, report
+from assignment.errors import hadError, error, masculineError, report, LexicalError
 from assignment.interpreter import Interpreter
 
 assingments = {}
@@ -79,6 +79,7 @@ class Scanner:
                 self.identifier()
             else:
                 masculineError(self.line,self.current,"Unexpected token")
+                raise LexicalError()
 
     def identifier(self):
         while (self.isAlphanumeric(self.peek())): self.advance()
@@ -100,6 +101,7 @@ class Scanner:
 
         if self.isAtEnd():
             error(self.line, "Unterminated String")
+            raise LexicalError()
 
         self.advance()
 
@@ -156,10 +158,11 @@ if __name__ == "__main__":
             if response == "\n" or response.strip((" ")) == "":
                 continue
             tokens = response.split(" ")
-            scanner = Scanner(response)
-            tokens = scanner.scanTokens()
-            # for token in tokens:
-            #     print("Type: %s, lexeme: %s, literal: %s" % (token.tokenType, token.lexeme, token.literal))
+            try:
+                scanner = Scanner(response)
+                tokens = scanner.scanTokens()
+            except:
+                continue
             if(tokens[0].tokenType == tokenClasses.TokenTypes.IDENTIFIER):
                 if tokens[1].tokenType == tokenClasses.TokenTypes.COLON_EQUAL:
                     isAssignment = True
@@ -174,7 +177,6 @@ if __name__ == "__main__":
                 else:
                     parser = Parser(tokens, scanner, assingments)
                     expr = parser.parse()
-                    # print(expr)
                     if expr == None: continue
                     interpreter = Interpreter()
                     result = interpreter.interpret(expr)
@@ -182,11 +184,7 @@ if __name__ == "__main__":
             else:
                 parser = Parser(tokens, scanner, assingments)
                 expr = parser.parse()
-                # print(expr)
                 if expr == None: continue
                 interpreter = Interpreter()
                 result = interpreter.interpret(expr)
                 print("%s" % result)
-
-            if hadError:
-                SystemExit(65)

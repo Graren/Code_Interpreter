@@ -1,6 +1,6 @@
 from assignment.writer import Visitor
 from assignment.tokenClasses import TokenTypes
-
+from assignment.errors import RuntimeError
 types = TokenTypes
 
 class Interpreter(Visitor):
@@ -14,6 +14,7 @@ class Interpreter(Visitor):
         right = self.evaluate(expr.expression)
 
         if expr.token.tokenType == types.MINUS:
+            checkNumberOperand(expr.token, right)
             return - float(right)
         elif expr.token.tokenType == types.BANG:
             return not isTruthy(right)
@@ -24,20 +25,30 @@ class Interpreter(Visitor):
         right = self.evaluate(expr.right)
 
         if expr.operator.tokenType == types.MINUS:
+            checkNumberOperands(expr.operator, left,right)
             return float(left) - float(right)
         elif expr.operator.tokenType == types.SLASH:
+            checkNumberOperands(expr.operator, left, right)
             return float(left) / float(right)
         elif expr.operator.tokenType == types.STAR:
+            checkNumberOperands(expr.operator, left, right)
             return float(left) * float(right)
         elif expr.operator.tokenType == types.PLUS:
-            return float(left) + float(right)
+            if (isNumber(left) and isNumber(right)):
+                return float(left) + float(right)
+            else:
+                return left + right
         elif expr.operator.tokenType == types.GREATER_EQUAL:
+            checkNumberOperands(expr.operator, left, right)
             return float(left) >= float(right)
         elif expr.operator.tokenType == types.GREATER:
+            checkNumberOperands(expr.operator, left, right)
             return float(left) > float(right)
         elif expr.operator.tokenType == types.LESS_EQUAL:
+            checkNumberOperands(expr.operator, left, right)
             return float(left) <= float(right)
         elif expr.operator.tokenType == types.LESS:
+            checkNumberOperands(expr.operator, left, right)
             return float(left) < float(right)
         elif expr.operator.tokenType == types.EQUAL_EQUAL:
             return isEqual(left,right)
@@ -49,9 +60,11 @@ class Interpreter(Visitor):
         return expr.accept(self)
 
     def interpret(self,expr):
-        value = self.evaluate(expr)
-        # print("%s" % value)
-        return value
+        try:
+            value = self.evaluate(expr)
+            return value
+        except RuntimeError as err:
+            print("ERROR: ", err.expression, " ", err.message)
 
 def isTruthy(obj):
     if obj is None or obj is False:
@@ -59,6 +72,14 @@ def isTruthy(obj):
     if obj is True:
         return True
     return True
+
+def checkNumberOperand(operator, operand):
+    if (isNumber(operand)): return
+    raise RuntimeError(operator, "Operand must be a number.");
+
+def checkNumberOperands(operator, left, right):
+    if ( isNumber(left) and isNumber(right)): return
+    raise RuntimeError(operator, "Operands must be numbers.");
 
 def isDigit(c):
     return c >= '0' and c <= '9'

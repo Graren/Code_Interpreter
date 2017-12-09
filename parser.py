@@ -5,7 +5,7 @@ from assignment.errors import report
 types = tokenClasses.TokenTypes
 
 def error(token, message):
-    report(token.line, "at '%s' "  % token.lexeme, " %s " % message )
+    report(token.line, "containing '%s' "  % token.lexeme, " %s " % message )
 
 
 class Parser:
@@ -76,7 +76,7 @@ class Parser:
 
         if( self.match(types.NUMBER, types.STRING)):
             return Literal(self.previous().literal)
-        if( self.match(types.IDENTIFIER) ):
+        if( self.match(types.IDENTIFIER)):
             id = self.previous().lexeme
             value = self.state.get(id)
             if value is None:
