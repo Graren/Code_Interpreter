@@ -39,6 +39,10 @@ class TokenTypes:
     FALSE = 26
     IF = 29
     ELSE = 30
+    NULL = 31
+    OR = 32
+    AND = 33
+
 
     #EOF , la verdad no la necesitamos
     EOF = 40
@@ -48,5 +52,7 @@ class TokenTypes:
         "var": VAR,
         "end": END,
         "true":TRUE,
-        "false": FALSE
+        "false": FALSE,
+        "||": OR,
+        "&&": AND
     }

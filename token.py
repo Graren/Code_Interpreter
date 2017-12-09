@@ -11,4 +11,6 @@ class Token:
         self.lexeme = lex
         self.literal = literal
         self.line = line
+    def __str__(self):
+        return "TOKEN\n\t TYPE: %s \t LEXEME: %s \t LITERAL: %s " % (self.tokenType, self.lexeme, self.literal)
 

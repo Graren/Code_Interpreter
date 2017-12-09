@@ -1,17 +1,9 @@
 from assignment.token import  Token, tokenClasses
+from assignment.parser import Parser
+from assignment.errors import hadError, error, masculineError, report
+from assignment.interpreter import Interpreter
 
-hadError = False
-
-def error (line, message):
-    report(line, "", message)
-
-def masculineError(line,where,message):
-    report(line,where,message)
-
-def report(line, where, message):
-    where = "somewhere" if where is None else where
-    print("[ line %d ] at column %s message: %s " % (line, where, message))
-    hadError = True
+assingments = {}
 
 class Scanner:
     source = ""
@@ -29,6 +21,7 @@ class Scanner:
         while (not self.isAtEnd()):
             self.start = self.current
             self.scanToken()
+        self.addToken(tokenClasses.TokenTypes.EOF)
         return self.tokenList
 
     def advance(self):
@@ -94,7 +87,7 @@ class Scanner:
         if (type is None):
             self.addToken(tokenClasses.TokenTypes.IDENTIFIER)
         else:
-            print("%s is a keyword"% text)
+            self.addToken(type)
 
     def peek(self):
         if( self.isAtEnd()): return '\\0'
@@ -157,13 +150,35 @@ class Scanner:
 
 if __name__ == "__main__":
         while(True):
+            isAssignment = False
+            id = None
             response = input(">>")
             tokens = response.split(" ")
             scanner = Scanner(response)
             tokens = scanner.scanTokens()
-            for token in tokens:
-                print("Type: %s, lexeme: %s, literal: %s" % (token.tokenType, token.lexeme, token.literal))
+            # for token in tokens:
+            #     print("Type: %s, lexeme: %s, literal: %s" % (token.tokenType, token.lexeme, token.literal))
+            if(tokens[0].tokenType == tokenClasses.TokenTypes.IDENTIFIER):
+                if tokens[1].tokenType == tokenClasses.TokenTypes.COLON_EQUAL:
+                    isAssignment = True
+                    id = tokens[0].lexeme
+                    tokens = tokens[2:]
+                    parser = Parser(tokens, scanner)
+                    expr = parser.parse()
+                    # print(expr)
+                    interpreter = Interpreter()
+                    result = interpreter.interpret(expr)
+                    assingments[id] = result
+                if not assingments.get(tokens[0].lexeme) == None:
+                    print("%s" % assingments.get(tokens[0].lexeme))
+            else:
+                parser = Parser(tokens, scanner)
+                expr = parser.parse()
+                # print(expr)
+                interpreter = Interpreter()
+                result = interpreter.interpret(expr)
+                print("%s" % result)
+
             if hadError:
                 SystemExit(65)
-
 
