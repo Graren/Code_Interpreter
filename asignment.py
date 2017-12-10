@@ -158,6 +158,8 @@ if __name__ == "__main__":
             result = None
             expr = None
             response = input(">>")
+            if response.strip(" ") == "exit":
+                break;
             if response == "\n" or response.strip((" ")) == "":
                 continue
             tokens = response.split(" ")

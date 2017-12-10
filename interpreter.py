@@ -29,6 +29,8 @@ class Interpreter(Visitor):
             return float(left) - float(right)
         elif expr.operator.tokenType == types.SLASH:
             checkNumberOperands(expr.operator, left, right)
+            if float(right) == 0:
+                raise RuntimeError(expr.operator, "You can't divide by 0.")
             return float(left) / float(right)
         elif expr.operator.tokenType == types.STAR:
             checkNumberOperands(expr.operator, left, right)
