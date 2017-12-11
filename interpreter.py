@@ -36,7 +36,7 @@ class Interpreter(Visitor):
             checkNumberOperands(expr.operator, left, right)
             return float(left) * float(right)
         elif expr.operator.tokenType == types.PLUS:
-            if (isNumber(left) and isNumber(right)):
+            if (isNumberByException(left) and isNumberByException(right)):
                 return float(left) + float(right)
             else:
                 return str(left) + str(right)
@@ -76,11 +76,11 @@ def isTruthy(obj):
     return True
 
 def checkNumberOperand(operator, operand):
-    if (isNumber(operand)): return
+    if (isNumberByException(operand)): return
     raise RuntimeError(operator, "Operand must be a number.");
 
 def checkNumberOperands(operator, left, right):
-    if ( isNumber(left) and isNumber(right)): return
+    if ( isNumberByException(left) and isNumberByException(right)): return
     raise RuntimeError(operator, "Operands must be numbers.");
 
 def isDigit(c):
@@ -91,6 +91,13 @@ def isNumber(string):
         if not isDigit(digit):
             return False
     return True
+
+def isNumberByException(c):
+    try:
+        float(c)
+        return True
+    except ValueError:
+        return False
 
 def isEqual(a, b):
     if (a == None and b == None): return True
