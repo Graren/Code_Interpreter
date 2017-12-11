@@ -33,7 +33,6 @@ class Parser:
             operator = self.previous();
             right = self.comparison();
             expr = Binary(expr, operator, right)
-
         return expr
 
     # comparison → addition ( ( ">" | ">=" | "<" | "<=" ) addition )* ;
@@ -45,6 +44,7 @@ class Parser:
             expr = Binary(expr, operator, right)
         return expr
 
+    # comparison → multiplication ( ( "+" | "-"  ) addition )* ;
     def addition(self):
         expr = self.multiplication()
         while (self.match(types.MINUS, types.PLUS)):
@@ -53,6 +53,7 @@ class Parser:
             expr = Binary(expr, operator, right)
         return expr
 
+    # comparison → unary ( ( "*" | "/"  ) unary )* ;
     def multiplication(self):
         expr = self.unary()
         while (self.match(types.SLASH, types.STAR)):
@@ -61,7 +62,7 @@ class Parser:
             expr = Binary(expr, operator, right)
         return expr
 
-    # unary → ( "!" | "-" ) unary| primary ;
+    # unary → ( "!" | "-" ) unary | primary ;
     def unary(self):
         if self.match(types.BANG, types.MINUS):
             operator = self.previous();
@@ -69,6 +70,7 @@ class Parser:
             return Unary(operator, right)
         return self.primary()
 
+    # primary → NUMBER | STRING | "false" | "true" | "null" | "(" expression ")"
     def primary(self):
         if self.match(types.FALSE): return Literal(False)
         if self.match(types.TRUE): return Literal(True)

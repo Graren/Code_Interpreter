@@ -130,7 +130,9 @@ class Scanner:
         if self.peek() == '.' and self.isDigit(self.peekNext()):
             self.advance()
             while(self.isDigit(self.peek())): self.advance()
-
+        # ESTE CAMBIO ZORRO LO ACABO DE AGREGAR Y NO SE SI FUNCIONA
+        elif self.peek() == '.' and not self.isDigit(self.peekNext()):
+            masculineError(self.line,self.current+1,"invalid character")
         substr = self.source[self.start: self.current]
         self.addTokenAndLiteral(tokenClasses.TokenTypes.NUMBER, substr)
 
