@@ -100,7 +100,8 @@ class Scanner:
             self.advance()
 
         if self.isAtEnd():
-            error(self.line, "Unterminated String")
+            cont = self.current
+            masculineError(self.line,self.current, "Expected \" Unterminated String")
             raise LexicalError()
 
         self.advance()
