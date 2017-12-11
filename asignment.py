@@ -137,7 +137,6 @@ class Scanner:
         substr = self.source[self.start: self.current]
         self.addTokenAndLiteral(tokenClasses.TokenTypes.NUMBER, substr)
 
-
     def peekNext(self):
         if self.current + 1 >= len(self.source): return '\0'
         else: return self.source[self.current + 1]
@@ -169,6 +168,17 @@ if __name__ == "__main__":
             try:
                 scanner = Scanner(response)
                 tokens = scanner.scanTokens()
+                for i,token in enumerate(tokens):
+                    if token.tokenType == tokenClasses.TokenTypes.COLON_EQUAL:
+                        if tokens[0].tokenType == tokenClasses.TokenTypes.IDENTIFIER:
+                            if tokens[1].tokenType == tokenClasses.TokenTypes.COLON_EQUAL:
+                                continue
+                            else:
+                                error(token.line, "Invalid assignment")
+                                raise LexicalError()
+                        else:
+                            error(token.line,"Invalid assignment")
+                            raise LexicalError()
             except:
                 continue
             if(tokens[0].tokenType == tokenClasses.TokenTypes.IDENTIFIER):
