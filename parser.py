@@ -64,7 +64,7 @@ class Parser:
 
     # unary → ( "!" | "-" ) unary | primary ;
     def unary(self):
-        if self.match(types.BANG, types.MINUS):
+        if self.match(types.BANG, types.MINUS, types.PLUS):
             operator = self.previous();
             right = self.unary();
             return Unary(operator, right)

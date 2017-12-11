@@ -16,8 +16,12 @@ class Interpreter(Visitor):
         if expr.token.tokenType == types.MINUS:
             checkNumberOperand(expr.token, right)
             return - float(right)
+        elif expr.token.tokenType == types.PLUS:
+            checkNumberOperand(expr.token, right)
+            return + float(right)
         elif expr.token.tokenType == types.BANG:
             return not isTruthy(right)
+
         return None
 
     def visitBinaryExpr(self,expr):
