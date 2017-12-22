@@ -2,7 +2,7 @@ from assignment.token import  Token, tokenClasses
 from assignment.parser import Parser
 from assignment.errors import hadError, error, masculineError, report, LexicalError
 from assignment.interpreter import Interpreter
-
+from assignment.intermediate import Generator
 assingments = {}
 
 class Scanner:
@@ -195,3 +195,7 @@ if __name__ == "__main__":
                 print(result)
             if isAssignment:
                 assingments[id] = result
+
+            generator = Generator(isAssignment,id)
+            generator.generate(expr)
+
