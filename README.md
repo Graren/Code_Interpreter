@@ -1,4 +1,5 @@
-· Overview
+# Overview
+
 This is a Token based full fledged interpreter that was meant to be a compilator for modula2. It ended up being a custom language interpreter with basic arithmetic, boolean logic and variable assignments.
 
 Based on a standard tokenize -> parse -> process using production rules to understand and feed the tokens to the interpreter.
